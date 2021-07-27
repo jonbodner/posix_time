@@ -53,13 +53,19 @@ Mon Jan 2 15:04:05 MST 2006
 which is Unix time 1136239445. Since MST is GMT-0700, the reference time can be thought of as
 
 01/02 03:04:05PM '06 -0700
-To define your own format, write down what the reference time would look like formatted your way; see the values of constants like ANSIC, StampMicro or Kitchen for examples. The model is to demonstrate what the reference time looks like so that the Format and Parse methods can apply the same transformation to a general time value.
+To define your own format, write down what the reference time would look like formatted your way; see the values of constants like ANSIC, 
+StampMicro or Kitchen for examples. The model is to demonstrate what the reference time looks like so that the Format and Parse methods 
+can apply the same transformation to a general time value.
 
 Some valid layouts are invalid time values for time.Parse, due to formats such as _ for space padding and Z for zone information.
 
-Within the format string, an underscore _ represents a space that may be replaced by a digit if the following number (a day) has two digits; for compatibility with fixed-width Unix time formats.
+Within the format string, an underscore _ represents a space that may be replaced by a digit if the following number (a day) has two digits; 
+for compatibility with fixed-width Unix time formats.
 
-A decimal point followed by one or more zeros represents a fractional second, printed to the given number of decimal places. A decimal point followed by one or more nines represents a fractional second, printed to the given number of decimal places, with trailing zeros removed. When parsing (only), the input may contain a fractional second field immediately after the seconds field, even if the layout does not signify its presence. In that case a decimal point followed by a maximal series of digits is parsed as a fractional second.
+A decimal point followed by one or more zeros represents a fractional second, printed to the given number of decimal places. A decimal point 
+followed by one or more nines represents a fractional second, printed to the given number of decimal places, with trailing zeros removed. 
+When parsing (only), the input may contain a fractional second field immediately after the seconds field, even if the layout does not signify 
+its presence. In that case a decimal point followed by a maximal series of digits is parsed as a fractional second.
 
 Numeric time zone offsets format as follows:
 
@@ -73,9 +79,11 @@ Z07:00 Z or ±hh:mm
 Z07    Z or ±hh
 The recognized day of week formats are "Mon" and "Monday". The recognized month formats are "Jan" and "January".
 
-The formats 2, _2, and 02 are unpadded, space-padded, and zero-padded day of month. The formats __2 and 002 are space-padded and zero-padded three-character day of year; there is no unpadded day of year format.
+The formats 2, _2, and 02 are unpadded, space-padded, and zero-padded day of month. The formats __2 and 002 are space-padded and zero-padded 
+three-character day of year; there is no unpadded day of year format.
 
-Text in the format string that is not recognized as part of the reference time is echoed verbatim during Format and expected to appear verbatim in the input to Parse.
+Text in the format string that is not recognized as part of the reference time is echoed verbatim during Format and expected to appear verbatim 
+in the input to Parse.
  */
 
 // PosixToGo takes in a datetime format string specified using the POSIX standard
@@ -115,7 +123,7 @@ func PosixToGo(formatString string) (string, error) {
 			case 'I':
 				out.WriteString("3")
 			case 'j':
-				return "", errors.New("%j not supported in Go:" + formatString)
+				out.WriteString("002")
 			case 'k':
 				out.WriteString("_15")
 			case 'l':
