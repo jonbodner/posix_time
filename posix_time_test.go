@@ -21,7 +21,7 @@ func TestPosixToGo(t *testing.T) {
 	}
 	for _, v := range data {
 		t.Run(v.name, func(t *testing.T) {
-			out, err := PosixToGo(v.input)
+			out, err := ToGo(v.input)
 			var errMsg string
 			if err != nil {
 				errMsg = err.Error()

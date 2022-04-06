@@ -2,6 +2,7 @@ package posix_time
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 )
 
@@ -53,18 +54,18 @@ Mon Jan 2 15:04:05 MST 2006
 which is Unix time 1136239445. Since MST is GMT-0700, the reference time can be thought of as
 
 01/02 03:04:05PM '06 -0700
-To define your own format, write down what the reference time would look like formatted your way; see the values of constants like ANSIC, 
-StampMicro or Kitchen for examples. The model is to demonstrate what the reference time looks like so that the Format and Parse methods 
+To define your own format, write down what the reference time would look like formatted your way; see the values of constants like ANSIC,
+StampMicro or Kitchen for examples. The model is to demonstrate what the reference time looks like so that the Format and Parse methods
 can apply the same transformation to a general time value.
 
 Some valid layouts are invalid time values for time.Parse, due to formats such as _ for space padding and Z for zone information.
 
-Within the format string, an underscore _ represents a space that may be replaced by a digit if the following number (a day) has two digits; 
+Within the format string, an underscore _ represents a space that may be replaced by a digit if the following number (a day) has two digits;
 for compatibility with fixed-width Unix time formats.
 
-A decimal point followed by one or more zeros represents a fractional second, printed to the given number of decimal places. A decimal point 
-followed by one or more nines represents a fractional second, printed to the given number of decimal places, with trailing zeros removed. 
-When parsing (only), the input may contain a fractional second field immediately after the seconds field, even if the layout does not signify 
+A decimal point followed by one or more zeros represents a fractional second, printed to the given number of decimal places. A decimal point
+followed by one or more nines represents a fractional second, printed to the given number of decimal places, with trailing zeros removed.
+When parsing (only), the input may contain a fractional second field immediately after the seconds field, even if the layout does not signify
 its presence. In that case a decimal point followed by a maximal series of digits is parsed as a fractional second.
 
 Numeric time zone offsets format as follows:
@@ -79,21 +80,23 @@ Z07:00 Z or ±hh:mm
 Z07    Z or ±hh
 The recognized day of week formats are "Mon" and "Monday". The recognized month formats are "Jan" and "January".
 
-The formats 2, _2, and 02 are unpadded, space-padded, and zero-padded day of month. The formats __2 and 002 are space-padded and zero-padded 
+The formats 2, _2, and 02 are unpadded, space-padded, and zero-padded day of month. The formats __2 and 002 are space-padded and zero-padded
 three-character day of year; there is no unpadded day of year format.
 
-Text in the format string that is not recognized as part of the reference time is echoed verbatim during Format and expected to appear verbatim 
+Text in the format string that is not recognized as part of the reference time is echoed verbatim during Format and expected to appear verbatim
 in the input to Parse.
- */
+*/
 
-// PosixToGo takes in a datetime format string specified using the POSIX standard
+// ToGo takes in a datetime format string specified using the POSIX standard
 // and converts it to a string in Go's datetime format.
-func PosixToGo(formatString string) (string, error) {
+func ToGo(formatString string) (string, error) {
 	var out strings.Builder
 	var lastPercent bool
 	for _, v := range formatString {
 		if lastPercent {
-			switch(v) {
+			switch v {
+			case 'U', 'u', 'V', 'W', 'w', 'X', 'x':
+				return "", fmt.Errorf("%%%s not supported in Go: %s", string(v), formatString)
 			case '%':
 				out.WriteRune('%')
 			case 'A':
@@ -107,7 +110,7 @@ func PosixToGo(formatString string) (string, error) {
 			case 'C':
 				out.WriteString("06")
 			case 'c':
-				return "", errors.New("unsupported POSIX %c: "+ formatString)
+				out.WriteString("Mon Jan _2 15:04:05 2006")
 			case 'D':
 				out.WriteString("01/02/06")
 			case 'd':
@@ -146,22 +149,8 @@ func PosixToGo(formatString string) (string, error) {
 				out.WriteString("15:04:05")
 			case 't':
 				out.WriteRune('\t')
-			case 'U':
-				return "", errors.New("%U not supported in Go: " + formatString)
-			case 'u':
-				return "", errors.New("%u not supported in Go: " + formatString)
-			case 'V':
-				return "", errors.New("%V not supported in Go: " + formatString)
 			case 'v':
 				out.WriteString("_2-Jan-2006")
-			case 'W':
-				return "", errors.New("%W not supported in Go: " + formatString)
-			case 'w':
-				return "", errors.New("%w not supported in Go: " + formatString)
-			case 'X':
-				return "", errors.New("%X not supported in Go: " + formatString)
-			case 'x':
-				return "", errors.New("%x not supported in Go: " + formatString)
 			case 'Y':
 				out.WriteString("2006")
 			case 'y':
