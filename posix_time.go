@@ -112,9 +112,9 @@ func ToGo(formatString string) (string, error) {
 			case 'c':
 				out.WriteString("Mon Jan _2 15:04:05 2006")
 			case 'D':
-				out.WriteString("01/02/06")
+				out.WriteString("1/2/06")
 			case 'd':
-				out.WriteString("02")
+				out.WriteString("2")
 			case 'e':
 				out.WriteString("_2")
 			case 'F':
@@ -134,7 +134,7 @@ func ToGo(formatString string) (string, error) {
 			case 'M':
 				out.WriteString("04")
 			case 'm':
-				out.WriteString("01")
+				out.WriteString("1")
 			case 'n':
 				out.WriteRune('\n')
 			case 'p':
